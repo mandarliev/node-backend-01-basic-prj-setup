@@ -49,7 +49,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: `http://localhost:5001/uploads/images/${req.file.filename}`,
+    image: req.file.path,
     password,
     places: [],
   });
