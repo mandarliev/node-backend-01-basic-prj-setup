@@ -1,3 +1,4 @@
+const fs = require("fs");
 const HttpError = require("../models/http-error");
 const uuid = require("uuid").v4;
 const { validationResult } = require("express-validator");
@@ -81,8 +82,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/1/10/Empire_State_Building_%28aerial_view%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    image: req.file.path,
     creator,
   });
 
@@ -169,6 +169,7 @@ const deletePlaceById = async (req, res, next) => {
 
   let place;
   let session;
+  let imagePath;
 
   try {
     session = await mongoose.startSession();
@@ -179,6 +180,7 @@ const deletePlaceById = async (req, res, next) => {
         return;
       }
 
+      imagePath = place.image;
       await User.updateOne(
         { _id: place.creator },
         { $pull: { places: place._id } },
@@ -204,7 +206,18 @@ const deletePlaceById = async (req, res, next) => {
     );
   }
 
-  res.status(200).json({ message: "Deleted place." });
+  fs.unlink(imagePath, (err) => {
+    if (err) {
+      return next(
+        new HttpError(
+          "Place was deleted, but its image could not be deleted.",
+          500,
+        ),
+      );
+    }
+
+    res.status(200).json({ message: "Deleted place." });
+  });
 };
 
 exports.getPlaceById = getPlaceById;
