@@ -18,10 +18,12 @@ const getUsers = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log(errors);
+  if (!errors.isEmpty() || !req.file) {
     return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422),
+      new HttpError(
+        "Invalid inputs passed, please check your data and upload an image.",
+        422,
+      ),
     );
   }
   const { name, email, password } = req.body;
@@ -47,7 +49,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: "https://live.staticflickr.com/7631/26849088292_36fc52ee90_b.jpg",
+    image: `http://localhost:5001/uploads/images/${req.file.filename}`,
     password,
     places: [],
   });
