@@ -16,6 +16,7 @@
     "body-parser": "^1.20.8",
     "express": "^4.22.3",
     "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.3",
     "mongoose-unique-validator": "^6.1.1",
     "multer": "^2.5.0",
