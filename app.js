@@ -51,7 +51,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://manu:academind123@cluster0.weanduy.mongodb.net/mern?appName=Cluster0",
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.weanduy.mongodb.net/${process.env.DB_NAME}?appName=Cluster0`,
     { serverSelectionTimeoutMS: 10000 },
   )
   .then(() => {
